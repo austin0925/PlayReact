@@ -54,6 +54,7 @@ class Game extends React.Component {
     this.state={
       history:[{
         squares: Array(9).fill(null),
+        position: Array(9).fill(null),
       }],
       stepNumber: 0,
       xIsNext: true,
@@ -64,6 +65,7 @@ class Game extends React.Component {
     const history = this.state.history.slice(0, this.state.stepNumber+1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
+    const position = i;
 
     //retuen when there is a winner or occupy
     if(calculateWinner(squares) || squares[i]){
@@ -73,7 +75,8 @@ class Game extends React.Component {
     squares[i] = this.state.xIsNext ? 'X':'O';
     this.setState({
       history: history.concat([{
-        squares: squares
+        squares: squares,
+        position: position,
       }]),
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
@@ -93,8 +96,11 @@ class Game extends React.Component {
     const winner = calculateWinner(current.squares);
 
     const moves = history.map((step, move)=>{
+      const pIdx = history[move].position;
+      const x = Math.floor(pIdx%3);
+      const y = Math.floor(pIdx/3);
       const desc = move?
-      'Go to move #'+move :
+      'Go to move #'+move + ' ('+x+','+y+')':
       'Go to game start';
       return(
         <li key={move}>
