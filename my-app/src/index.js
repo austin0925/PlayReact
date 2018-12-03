@@ -90,6 +90,16 @@ class Game extends React.Component {
     });
   }
 
+  componentDidMount(){
+    console.log('DidMount');
+  }
+  componentDidUpdate(){
+    console.log('DidUpdate');
+  }
+  componentWillUnmount(){
+    console.log('WilllUnmount');
+  }
+
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
@@ -102,18 +112,20 @@ class Game extends React.Component {
       const desc = move?
       'Go to move #'+move + ' ('+x+','+y+')':
       'Go to game start';
-      return(
-        <li key={move}>
-          <button onClick={() => this.jumpTo(move)}>{desc}</button>
-        </li>
-      );
+        return(
+          <li key={move}>
+            <button onClick={() => this.jumpTo(move)}>
+              {(move+1===history.length) && <b>{desc}</b>}
+              {(move+1!==history.length) && desc}
+            </button>
+          </li>
+        );
     });
 
     let status = winner
       ? 'Winner: ' + winner
       : 'Next player: ' + (this.state.xIsNext ? 'X':'O')
     ;
-
 
     return (
       <div className="game">
