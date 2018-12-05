@@ -50,6 +50,7 @@ class Game extends React.Component {
         squares: Array(9).fill(null),
         position: Array(9).fill(null),
       }],
+      reverse: false,
       stepNumber: 0,
       xIsNext: true,
     };
@@ -85,6 +86,10 @@ class Game extends React.Component {
   }
 
   handleReverse(i){
+    console.log('handleReverse');
+    this.setState({
+      reverse: !this.state.reverse,
+    });
     console.log(i);
   }
 
@@ -93,6 +98,7 @@ class Game extends React.Component {
   }
   componentDidUpdate(){
     console.log('DidUpdate');
+    this.render();
   }
   componentWillUnmount(){
     console.log('WilllUnmount');
@@ -135,7 +141,7 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <ol><button onClick={(i)=>this.handleReverse(i)}>reversal</button></ol>
+          <ol><button onClick={()=>this.handleReverse(history)}>reversal</button></ol>
           <ol key="movesKey">{moves}</ol>
         </div>
       </div>
