@@ -84,6 +84,10 @@ class Game extends React.Component {
     });
   }
 
+  handleReverse(i){
+    console.log(i);
+  }
+
   componentDidMount(){
     console.log('DidMount');
   }
@@ -131,7 +135,8 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <ol>{moves}</ol>
+          <ol><button onClick={(i)=>this.handleReverse(i)}>reversal</button></ol>
+          <ol key="movesKey">{moves}</ol>
         </div>
       </div>
     );
