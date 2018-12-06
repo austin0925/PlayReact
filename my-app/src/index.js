@@ -98,7 +98,6 @@ class Game extends React.Component {
     for(var testEle of testEles.children){
       testEles.prepend(testEle);
     }
-    console.log(testEles);
   }
 
   componentDidMount(){
