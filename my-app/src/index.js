@@ -11,7 +11,7 @@ function Square(props){
   const redStyle={color:'red',}
   const blackStyle={color:'black',}
   return (
-    <button className="square" onClick={props.onClick} style={props.match!=-1?redStyle:blackStyle}>
+    <button className="square" onClick={props.onClick} style={props.match!==-1?redStyle:blackStyle}>
       {props.value}
     </button>
   );
@@ -94,6 +94,11 @@ class Game extends React.Component {
     this.setState({
       reverse: !this.state.reverse,
     });
+    let testEles = document.getElementById('movesKey');
+    for(var testEle of testEles.children){
+      testEles.prepend(testEle);
+    }
+    console.log(testEles);
   }
 
   componentDidMount(){
@@ -111,7 +116,7 @@ class Game extends React.Component {
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
     const matchMap = matchWinner(current.squares);
-    const isFull = current.squares.indexOf(null)==-1;
+    const isFull = current.squares.indexOf(null)===-1;
 
     const moves = history.map((step, move)=>{
       const pIdx = history[move].position;
@@ -149,7 +154,7 @@ class Game extends React.Component {
         <div className="game-info">
           <div>{status}</div>
           <ol><button onClick={()=>this.handleReverse(history)}>reversal</button></ol>
-          <ol key="movesKey">{moves}</ol>
+          <ol key="movesKey" id="movesKey">{moves}</ol>
         </div>
       </div>
     );
