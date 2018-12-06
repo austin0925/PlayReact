@@ -8,8 +8,10 @@ import './index.css';
  * @param {*} props 
  */
 function Square(props){
+  const redStyle={color:'red',}
+  const blackStyle={color:'black',}
   return (
-    <button className="square" onClick={props.onClick}>
+    <button className="square" onClick={props.onClick} style={props.match!=-1?redStyle:blackStyle}>
       {props.value}
     </button>
   );
@@ -21,6 +23,7 @@ class Board extends React.Component {
       <Square
         key={'square'+(i)}
         value={this.props.squares[i]}
+        match={this.props.match.join().indexOf(i)}
         onClick={() => this.props.onClick(i)}
       />
     );
@@ -50,6 +53,7 @@ class Game extends React.Component {
         squares: Array(9).fill(null),
         position: Array(9).fill(null),
       }],
+      match: [],
       reverse: false,
       stepNumber: 0,
       xIsNext: true,
@@ -108,6 +112,7 @@ class Game extends React.Component {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
+    const matchMap = matchWinner(current.squares);
 
     const moves = history.map((step, move)=>{
       const pIdx = history[move].position;
@@ -128,7 +133,7 @@ class Game extends React.Component {
 
     let status = winner
       ? 'Winner: ' + winner
-      : 'Next player: ' + (this.state.xIsNext ? 'X':'O')
+      : 'Next player: ' + (this.state.xIsNext ? 'X':'O '+ matchMap)
     ;
 
     return (
@@ -136,6 +141,7 @@ class Game extends React.Component {
         <div className="game-board">
           <Board 
             squares={current.squares}
+            match={matchMap}
             onClick={(i) => this.handleClick(i)}
           />
         </div>
@@ -156,7 +162,8 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-function calculateWinner(squares){
+function matchWinner(squares){
+  let ans = [];
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -170,8 +177,20 @@ function calculateWinner(squares){
   for(let i=0; i<lines.length; i++){
     const [a,b,c] = lines[i];
     if (squares[a]&&squares[a] === squares[b]&&squares[a]===squares[c]){
-      return squares[a]
+      ans.push([a,b,c]);
     }
+  }
+  return ans;
+}
+
+function calculateWinner(squares){
+  const ans = matchWinner(squares);
+  if(ans.length<1){
+    return null;
+  }
+  const [a,b,c]=ans[0];
+  if (squares[a]&&squares[a] === squares[b]&&squares[a]===squares[c]){
+    return squares[a]
   }
   return null;
 }
