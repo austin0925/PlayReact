@@ -94,7 +94,6 @@ class Game extends React.Component {
     this.setState({
       reverse: !this.state.reverse,
     });
-    console.log(i);
   }
 
   componentDidMount(){
@@ -102,17 +101,17 @@ class Game extends React.Component {
   }
   componentDidUpdate(){
     console.log('DidUpdate');
-    this.render();
   }
   componentWillUnmount(){
     console.log('WilllUnmount');
   }
-
+  
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
     const matchMap = matchWinner(current.squares);
+    const isFull = current.squares.indexOf(null)==-1;
 
     const moves = history.map((step, move)=>{
       const pIdx = history[move].position;
@@ -131,9 +130,11 @@ class Game extends React.Component {
         );
     });
 
-    let status = winner
-      ? 'Winner: ' + winner
-      : 'Next player: ' + (this.state.xIsNext ? 'X':'O '+ matchMap)
+    
+    let status = 
+      winner ? 'Winner: ' + winner:
+      isFull ? 'DRAW':
+      'Next player: ' + (this.state.xIsNext ? 'X':'O')
     ;
 
     return (
