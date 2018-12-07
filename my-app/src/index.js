@@ -62,7 +62,7 @@ class Game extends React.Component {
 
   handleClick(i) {
     const history = this.state.history.slice(0, this.state.stepNumber+1);
-    const current = history[history.length - 1];
+    const current = this.getCurrentStep(this.state.reverse, this.state.history);
     const squares = current.squares.slice();
     const position = i;
 
@@ -71,12 +71,16 @@ class Game extends React.Component {
       return ;
     }
 
+    const newStep = {
+      squares: squares,
+      position: position,
+    };
+
+    console.log(this.history);
     squares[i] = this.state.xIsNext ? 'X':'O';
+    this.state.reverse ? this.state.history.unshift(newStep) : this.state.history.push(newStep);
     this.setState({
-      history: history.concat([{
-        squares: squares,
-        position: position,
-      }]),
+      history: this.state.history,
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
     });
@@ -92,12 +96,10 @@ class Game extends React.Component {
   handleReverse(i){
     console.log('handleReverse');
     this.setState({
+      history: this.state.history.reverse(),
       reverse: !this.state.reverse,
     });
-    let testEles = document.getElementById('movesKey');
-    for(var testEle of testEles.children){
-      testEles.prepend(testEle);
-    }
+    this.render();
   }
 
   componentDidMount(){
@@ -112,18 +114,20 @@ class Game extends React.Component {
   
   render() {
     const history = this.state.history;
-    const current = history[this.state.stepNumber];
+    const current = this.getCurrentStep(this.state.reverse, this.state.history);
     const winner = calculateWinner(current.squares);
     const matchMap = matchWinner(current.squares);
     const isFull = current.squares.indexOf(null)===-1;
 
+    console.log(history);
     const moves = history.map((step, move)=>{
       const pIdx = history[move].position;
       const x = Math.floor(pIdx%3);
       const y = Math.floor(pIdx/3);
-      const desc = move?
-      'Go to move #'+move + ' ('+x+','+y+')':
-      'Go to game start';
+
+      const desc = this.isStartElement(this.state.reverse, move, this.state.history) ?
+      'Go to game start' : 
+      'Go to move #'+move + ' ('+x+','+y+')';
         return(
           <li key={move}>
             <button onClick={() => this.jumpTo(move)}>
@@ -133,7 +137,6 @@ class Game extends React.Component {
           </li>
         );
     });
-
     
     let status = 
       winner ? 'Winner: ' + winner:
@@ -157,6 +160,14 @@ class Game extends React.Component {
         </div>
       </div>
     );
+  }
+
+  isStartElement(isReverse, movement, history) {
+    return (!isReverse && movement === 0) ||
+      (isReverse && movement === history.length - 1);
+  }
+  getCurrentStep(isReverse, history){
+    return isReverse?history[0]:history[history.length-1];
   }
 }
 
