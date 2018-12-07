@@ -58,6 +58,10 @@ class Game extends React.Component {
       stepNumber: 0,
       xIsNext: true,
     };
+    const cache = localStorage.getItem('bla');
+    if (cache) {
+      this.state = JSON.parse(cache);
+    }
   }
 
   handleClick(i) {
@@ -84,6 +88,7 @@ class Game extends React.Component {
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
     });
+    localStorage.setItem('bla', JSON.stringify(this.state));
   }
 
   jumpTo(step){
